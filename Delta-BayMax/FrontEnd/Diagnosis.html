@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baymax Bot - Diagnosis</title>
+    <link rel="stylesheet" href="Components/NBar/navbarstyle.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            max-width: 6000px;
+            max-height: 4500px;
+            
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: row;
+        }
+        #video-container {
+            flex: 3;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+        }
+        #video-container.off {
+            width: 655px; /* Adjust the width as needed */
+            height: 530px; /* Adjust the height as needed */
+        }
+        #content {
+            flex: 1;
+            padding: 20px;
+        }
+        video {
+            width: 100%;
+            height: auto;
+        }
+        #camera-button {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #camera-button img {
+            width: 24px;
+            height: 24px;
+        }
+        #camera-button.off {
+            background-color: red;
+        }
+        #camera-off-message {
+            position: absolute;
+            color: white;
+            font-size: 1.5rem;
+            font-family: 'Arial', sans-serif;
+            display: none;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #f1f1f1;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="d-flex align-items-center">
+        <div class="container">
+            <!-- Logo Section -->
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/baymax.png" alt="Baymax Bot">
+                </a>
+                <span class="logo-text">BayMax <span class="highlight">BOT</span></span>
+            </div>
+            <!-- Navigation Menu -->
+            <nav class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="Diagnosis.html">Diagnosis</a>
+                <a href="About.html">About</a>
+                <a href="#">Our Team</a>
+                <div class="get-started">
+                    <a href="#">Donate</a>
+                </div>
+            </nav>
+        </header>div>
+    </header>
+    <main>
+        <div id="video-container" class="off">
+            <video id="video" autoplay></video>
+            <div id="camera-off-message">Camera Turned Off.</div>
+            <button id="camera-button" class="off">
+                <img id="camera-icon" src="assets/camera_off.webp" alt="Camera Icon">
+            </button>
+        </div>
+        <div id="content">
+            <h1>Diagnosis Page</h1>
+            <p>Provide information about diagnosis here.</p>
+            <!-- Add more content as needed -->
+        </div>
+        <div id="chatbot-container">
+            <!-- Include the chatbot code here -->
+            <script src="path/to/chatbot.js"></script>
+        </div>
+    </main>
+    <footer>
+        <p>Thank you for choosing Baymax Bot as your health companion. Let’s create a healthier future together!</p>
+    </footer>
+    <script>
+        const video = document.getElementById('video');
+        const videoContainer = document.getElementById('video-container');
+        const cameraButton = document.getElementById('camera-button');
+        const cameraIcon = document.getElementById('camera-icon');
+        const cameraOffMessage = document.getElementById('camera-off-message');
+        let stream;
+
+        cameraButton.addEventListener('click', () => {
+            if (cameraButton.classList.contains('off')) {
+                // Turn on the camera
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(s) {
+                    stream = s;
+                    video.srcObject = stream;
+                    video.play();
+                    cameraOffMessage.style.display = 'none';
+                    videoContainer.style.width = '655px'; // Adjust the width as needed
+                    videoContainer.style.height = '530px'; // Adjust the height as needed
+                });
+                cameraButton.classList.remove('off');
+                cameraIcon.src = 'assets/Camera_On.png'; // Update to the camera icon without strike-through
+            } else {
+                // Turn off the camera
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                video.srcObject = null;
+                cameraOffMessage.style.display = 'block';
+                videoContainer.style.width = '655px'; // Adjust the width as needed
+                videoContainer.style.height = '530px'; // Adjust the height as needed
+                cameraButton.classList.add('off');
+                cameraIcon.src = 'assets/camera_off.webp'; // Update to the camera icon with strike-through
+            }
+        });
+    </script>
+</body>
+</html>
