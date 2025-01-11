@@ -17,12 +17,14 @@
             flex-direction: column;
         }
         main {
-            max-width: 1200px;
+            max-width: 6000px;
+            max-height: 4500px;
+            
             margin: 2rem auto;
             padding: 1rem;
             background: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 20px;
             display: flex;
             flex-direction: row;
         }
@@ -33,6 +35,10 @@
             align-items: center;
             justify-content: center;
             background-color: #000;
+        }
+        #video-container.off {
+            width: 655px; /* Adjust the width as needed */
+            height: 530px; /* Adjust the height as needed */
         }
         #content {
             flex: 1;
@@ -78,12 +84,6 @@
             font-size: 0.9rem;
             margin-top: 2rem;
         }
-        #chatbot-container {
-            flex: 1;
-            padding: 20px;
-            background: #f9f9f9;
-            border-left: 1px solid #ddd;
-        }
     </style>
 </head>
 <body>
@@ -107,14 +107,14 @@
                     <a href="#">Donate</a>
                 </div>
             </nav>
-        </div>
+        </header>div>
     </header>
     <main>
-        <div id="video-container">
+        <div id="video-container" class="off">
             <video id="video" autoplay></video>
-            <div id="camera-off-message">CAMERA TURNED OFF</div>
+            <div id="camera-off-message">Camera Turned Off.</div>
             <button id="camera-button" class="off">
-                <img id="camera-icon" src="camera-icon-off.png" alt="Camera Icon">
+                <img id="camera-icon" src="assets/camera_off.webp" alt="Camera Icon">
             </button>
         </div>
         <div id="content">
@@ -132,6 +132,7 @@
     </footer>
     <script>
         const video = document.getElementById('video');
+        const videoContainer = document.getElementById('video-container');
         const cameraButton = document.getElementById('camera-button');
         const cameraIcon = document.getElementById('camera-icon');
         const cameraOffMessage = document.getElementById('camera-off-message');
@@ -145,9 +146,11 @@
                     video.srcObject = stream;
                     video.play();
                     cameraOffMessage.style.display = 'none';
+                    videoContainer.style.width = '655px'; // Adjust the width as needed
+                    videoContainer.style.height = '530px'; // Adjust the height as needed
                 });
                 cameraButton.classList.remove('off');
-                cameraIcon.src = 'camera-icon.png'; // Update to the camera icon without strike-through
+                cameraIcon.src = 'assets/Camera_On.png'; // Update to the camera icon without strike-through
             } else {
                 // Turn off the camera
                 if (stream) {
@@ -155,8 +158,10 @@
                 }
                 video.srcObject = null;
                 cameraOffMessage.style.display = 'block';
+                videoContainer.style.width = '655px'; // Adjust the width as needed
+                videoContainer.style.height = '530px'; // Adjust the height as needed
                 cameraButton.classList.add('off');
-                cameraIcon.src = 'camera-icon-off.png'; // Update to the camera icon with strike-through
+                cameraIcon.src = 'assets/camera_off.webp'; // Update to the camera icon with strike-through
             }
         });
     </script>
