@@ -259,26 +259,21 @@
           },
           body: JSON.stringify({ message: message })
         })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-          typingIndicator.style.display = 'none';
-          if (data.error) {
-            addMessage(`Error: ${data.error}`);
-          } else {
-            addMessage(data.response);
-          }
+            typingIndicator.style.display = 'none';
+            if (data.error) {
+                addMessage(`Error: ${data.error}`);
+            } else {
+                addMessage(data.response);
+            }
         })
         .catch(error => {
-          typingIndicator.style.display = 'none';
-          console.error('Error:', error);
-          addMessage('Sorry, I encountered an error. Please try again. Error details: ' + error.message);
+            typingIndicator.style.display = 'none';
+            console.error('Error:', error);
+            addMessage('Sorry, I encountered an error. Please try again.');
         });
-      }
+    }
 
       // Event listeners
       sendButton.addEventListener('click', sendMessage);

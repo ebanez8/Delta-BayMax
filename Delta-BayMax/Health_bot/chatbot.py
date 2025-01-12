@@ -1,30 +1,10 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
-import pandas as pd
-import os
+from flask import Flask, request, jsonify
 import cohere
+
 app = Flask(__name__)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Define the base directory and data paths
-
-co =cohere.Client(api_key = 'jG1adZN7sF5IYEYh1GxQcj55aQkvO20aOx0PcH1e')
 
 
-# Initialize the bot with data
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-@app.route('/diagnosis')
-def diagnosis():
-    return render_template('Diagnosis.html')
+co = cohere.Client(api_key="jG1adZN7sF5IYEYh1GxQcj55aQkvO20aOx0PcH1e")  
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -54,17 +34,5 @@ def chat():
 
     return jsonify({'response': response_text})
 
-
-@app.route('/Components/NBar/<path:filename>')
-def serve_nbar(filename):
-    return send_from_directory(os.path.join(BASE_DIR, '../FrontEnd/Components/NBar'), filename)
-
-@app.route('/assets/<path:filename>')
-def serve_assets(filename):
-    return send_from_directory(os.path.join(BASE_DIR, '../FrontEnd/assets'), filename)
-
 if __name__ == '__main__':
-    print(f"Current working directory: {os.getcwd()}")
-    print(f"Template folder path: {os.path.abspath(app.template_folder)}")
-    print(f"Index.html exists: {os.path.exists(os.path.join(app.template_folder, 'index.html'))}")
-    app.run(debug=True, port=5001)
+    app.run(debug=True)
