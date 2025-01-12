@@ -36,6 +36,9 @@ def about():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+@app.route('/diagnosis')
+def diagnosis():
+    return render_template('Diagnosis.html')
 
 @app.route('/chat', methods=['POST'])
 def chat():
