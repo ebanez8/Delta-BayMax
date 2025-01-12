@@ -1,15 +1,25 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, Response
 import pandas as pd
 import os
 import cohere
+import cv2
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.preprocessing import image
+
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Define the base directory and data paths
-
+model_path = "final_injury_illness_model.keras"
 co =cohere.Client(api_key = 'jG1adZN7sF5IYEYh1GxQcj55aQkvO20aOx0PcH1e')
+model = tf.keras.models.load_model(model_path)
 
+class_labels = ['Abrasions', 'Bruises', 'Burns', 'Cuts']
 
 # Initialize the bot with data
+
+
+
 
 @app.route('/')
 def index():
@@ -54,6 +64,41 @@ def chat():
 
     return jsonify({'response': response_text})
 
+@app.route('/video_feed')
+def video_feed():
+    def generate():
+        cap = cv2.VideoCapture(0)
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            # Resize the image to the same size as the model input (224x224 for MobileNetV2)
+            img = cv2.resize(frame, (224, 224))
+
+            # Convert image to array and normalize
+            img_array = image.img_to_array(img) / 255.0
+            img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
+
+            # Make prediction
+            predictions = model.predict(img_array)
+            predicted_class = np.argmax(predictions, axis=1)
+            class_name = class_labels[predicted_class[0]]
+
+            # Display the result
+            cv2.putText(frame, f"Prediction: {class_name}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+            # Encode the frame in JPEG format
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+
+            # Yield the frame in byte format
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+        cap.release()
+
+    return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/Components/NBar/<path:filename>')
 def serve_nbar(filename):
